@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <title>SocialMedia API Tester</title>
+  <style>
+    body { font-family: sans-serif; background: #f7f7f7; padding: 20px; }
+    input, select, textarea, button { display: block; margin: 10px 0; width: 100%; padding: 8px; font-size: 16px; }
+    pre { background: #222; color: #0f0; padding: 10px; border-radius: 8px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h2>🔍 اختبار SocialMedia API</h2>
+  
+  <label>المنصة:</label>
+  <select id="platform">
+    <option value="youtube">YouTube</option>
+    <option value="tiktok">TikTok</option>
+    <option value="facebook">Facebook</option>
+    <option value="instagram">Instagram</option>
+    <option value="snapchat">Snapchat</option>
+  </select>
+
+  <label>رابط الفيديو أو المنشور:</label>
+  <input id="url" placeholder="ضع الرابط هنا..." />
+
+  <label>الأمر (Command):</label>
+  <select id="command">
+    <option value="1">1 - Video Info</option>
+    <option value="2">2 - Comments</option>
+    <option value="3">3 - Both</option>
+  </select>
+
+  <label>الوضع:</label>
+  <select id="mode">
+    <option value="sync">Sync (فوري)</option>
+    <option value="async">Async (خلف الكواليس)</option>
+  </select>
+
+  <button onclick="sendRequest()">🚀 أرسل الطلب</button>
+
+  <h3>النتيجة:</h3>
+  <pre id="result"></pre>
+
+  <script>
+    async function sendRequest() {
+      const resultEl = document.getElementById('result');
+      resultEl.textContent = "⏳ جاري الإرسال...";
+
+      const payload = {
+        platform: document.getElementById('platform').value,
+        url: document.getElementById('url').value,
+        command: Number(document.getElementById('command').value),
+        mode: document.getElementById('mode').value,
+        ttl: 300
+      };
+
+      try {
+        const res = await fetch('http://localhost:4000/v1/fetch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        resultEl.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        resultEl.textContent = "❌ خطأ: " + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
